@@ -286,6 +286,31 @@ func (tc *TwoCaptcha) Report(id string, correct bool) error {
 	}
 }
 
+func (tc *TwoCaptcha) GetBalance() (float64, error) {
+	req, err := http.NewRequest("GET", "https://2captcha.com/res.php", nil)
+	if err != nil {
+		return 0, err
+	}
+	q := url.Values{}
+	q.Add("key", tc.Key)
+	q.Add("action", "getbalance")
+	req.URL.RawQuery = q.Encode()
+	resp, err := tc.http.Do(req)
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, err
+	}
+	bal, err := strconv.ParseFloat(string(body), 64)
+	if err != nil {
+		return 0, err
+	}
+	return bal, nil
+}
+
 type TwoCaptchaRequest struct {
 	Params map[string]string
 	Files  map[string]string

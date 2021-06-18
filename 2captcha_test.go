@@ -8,6 +8,12 @@ import (
 
 var api2CaptchaKey = os.Getenv("API2CAPTCHA")
 
+// TestTwoCaptcha_Type tests whether the the 2captcha client implements
+// to the Client interface
+func TestTwoCaptcha_Type(t *testing.T) {
+	var _ Client = &TwoCaptcha{}
+}
+
 func TestTwoCaptcha_Solve(t *testing.T) {
 	solver := NewTwoCaptchaClient(api2CaptchaKey)
 	solver.Debug = true
