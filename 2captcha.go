@@ -26,7 +26,6 @@ func NewTwoCaptchaClient(key string) *TwoCaptcha {
 type TwoCaptcha struct {
 	Key    string
 	SoftID string
-	Debug bool
 	http   *http.Client
 }
 
@@ -73,6 +72,8 @@ func (tc *TwoCaptcha) Send(captcha interface{}, proxy string) (string, error) {
 	switch v := captcha.(type) {
 	case ReCaptcha:
 		req = tc.reCaptcha(v)
+	case HCaptcha:
+		req = tc.hCaptcha(v)
 	default:
 		return "", ErrUnsupportedCaptcha
 	}
@@ -180,7 +181,7 @@ func (tc *TwoCaptcha) Send(captcha interface{}, proxy string) (string, error) {
 			return "", ErrIPBanned
 		case "ERROR_BAD_TOKEN_OR_PAGEURL":
 			return "", ErrBadTokenOrPageURL
-		case "ERROR_GOOGLEKEY":
+		case "ERROR_GOOGLEKEY", "ERROR_SITEKEY":
 			return "", ErrGoogleKey
 		case "ERROR_WRONG_GOOGLEKEY":
 			return "", ErrGoogleKey
@@ -224,7 +225,6 @@ func (tc *TwoCaptcha) GetRes(id string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	tc.logf("res got response %v", string(body))
 	switch string(body) {
 	case "CAPCHA_NOT_READY":
 		return "", ErrCaptchaNotReady
@@ -351,7 +351,7 @@ func (*TwoCaptcha) hCaptcha(c HCaptcha) TwoCaptchaRequest {
 		},
 	}
 	if c.SiteKey != "" {
-		req.Params["googlekey"] = c.SiteKey
+		req.Params["sitekey"] = c.SiteKey
 	}
 	if c.PageUrl != "" {
 		req.Params["pageurl"] = c.PageUrl
