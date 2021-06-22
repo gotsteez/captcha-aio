@@ -72,6 +72,7 @@ type (
 	HCaptcha struct {
 		SiteKey string
 		PageUrl     string
+		UserAgent string
 	}
 
 	KeyCaptcha struct {
@@ -104,6 +105,7 @@ type (
 		Version   string
 		Action    string
 		Score     float64
+		UserAgent string
 	}
 
 	Rotate struct {
