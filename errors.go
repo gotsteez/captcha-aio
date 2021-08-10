@@ -26,6 +26,8 @@ var (
 	ErrTooManyBadImages      = errors.New("captchaAIO: sent too many unrecognizable images")
 	ErrMaxUserTurn           = errors.New("captchaAIO: submitted too many captchas to service")
 	ErrBadParameters         = errors.New("captchaAIO: required parameters are missing in request, or in incorrect format")
+	ErrNoSuchCaptchaID       = errors.New("captchaAIO: Captcha you are requesting does not exist in your current captcha list or has been expired")
+	ErrNoSuchMethod          = errors.New("captchaAIO: Request to API made with method which does not exist")
 )
 
 // Possible errors from results
